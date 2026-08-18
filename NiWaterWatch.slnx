@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NiWaterWatch.Api/NiWaterWatch.Api.csproj" />
+    <Project Path="src/NiWaterWatch.Domain/NiWaterWatch.Domain.csproj" />
+    <Project Path="src/NiWaterWatch.Infrastructure/NiWaterWatch.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NiWaterWatch.Tests/NiWaterWatch.Tests.csproj" />
+  </Folder>
+</Solution>

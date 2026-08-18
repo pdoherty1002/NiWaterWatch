@@ -32,7 +32,6 @@ erDiagram
   }
 ```
 
-(GitHub renders this block automatically — no extra tooling needed to view it.)
 
 ## Tables
 

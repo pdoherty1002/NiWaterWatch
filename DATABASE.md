@@ -32,7 +32,7 @@ erDiagram
   }
 ```
 
-## Stations
+(GitHub renders this block automatically — no extra tooling needed to view it.)
 
 Seeded from the DAERA/NIEA open dataset.
 

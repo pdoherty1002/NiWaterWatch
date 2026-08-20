@@ -8,7 +8,6 @@ namespace NiWaterWatch.Api.Controllers;
 [Route("api/[controller]")]
 public class StationsController : ControllerBase
 {
-    // The services this controller delegates all actual logic to.
     private readonly StationService _stationService;
     private readonly ReadingService _readingService;
 
@@ -24,6 +23,14 @@ public class StationsController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var stations = await _stationService.GetAllAsync();
+        return Ok(stations);
+    }
+
+    /// <summary>Searches for stations whose name contains the given text.</summary>
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchByName([FromQuery] string name)
+    {
+        var stations = await _stationService.SearchByNameAsync(name);
         return Ok(stations);
     }
 
@@ -51,8 +58,6 @@ public class StationsController : ControllerBase
         if (station is null)
             return NotFound();
 
-        // Defensive bounds — stops a caller requesting page 0, a negative page,
-        // or a pageSize of 100,000 that would defeat the point of paging at all.
         if (page < 1) page = 1;
         if (pageSize < 1 || pageSize > 200) pageSize = 50;
 

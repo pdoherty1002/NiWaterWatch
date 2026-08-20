@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using NiWaterWatch.Domain.Interfaces;
 
@@ -9,10 +10,7 @@ namespace NiWaterWatch.Infrastructure.Persistence;
 /// </summary>
 public class Repository<T, TKey> : IRepository<T, TKey> where T : class
 {
-    // The shared database context this repository operates through.
     private readonly AppDbContext _context;
-
-    // The specific table (DbSet) for entity type T within that context.
     private readonly DbSet<T> _dbSet;
 
     /// <summary>Creates a repository bound to the given database context.</summary>
@@ -27,6 +25,10 @@ public class Repository<T, TKey> : IRepository<T, TKey> where T : class
 
     /// <inheritdoc/>
     public async Task<IReadOnlyList<T>> GetAllAsync() => await _dbSet.ToListAsync();
+
+    /// <inheritdoc/>
+    public async Task<IReadOnlyList<T>> GetByConditionAsync(Expression<Func<T, bool>> predicate)
+        => await _dbSet.Where(predicate).ToListAsync();
 
     /// <inheritdoc/>
     public async Task AddAsync(T entity) => await _dbSet.AddAsync(entity);

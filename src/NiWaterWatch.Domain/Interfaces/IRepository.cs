@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace NiWaterWatch.Domain.Interfaces;
 
 /// <summary>
@@ -14,6 +16,9 @@ public interface IRepository<T, TKey> where T : class
 
     /// <summary>Fetches every entity of this type.</summary>
     Task<IReadOnlyList<T>> GetAllAsync();
+
+    /// <summary>Fetches every entity matching the given condition.</summary>
+    Task<IReadOnlyList<T>> GetByConditionAsync(Expression<Func<T, bool>> predicate);
 
     /// <summary>Stages a new entity for insertion. Call <see cref="SaveChangesAsync"/> to actually persist it.</summary>
     Task AddAsync(T entity);

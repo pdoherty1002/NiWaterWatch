@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NiWaterWatch.Domain.Interfaces;
 using NiWaterWatch.Infrastructure.Persistence;
+using NiWaterWatch.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+builder.Services.AddScoped<StationService>();
 
 var app = builder.Build();
 

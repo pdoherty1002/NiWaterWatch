@@ -44,4 +44,26 @@ public class ReadingService
 
         return new PagedResult<ReadingDto>(items, page, pageSize, totalCount);
     }
+
+    /// <summary>
+    /// Creates a new reading for a station, submitted by a registered user.
+    /// </summary>
+    /// <param name="stationId">The station this reading belongs to.</param>
+    /// <param name="userId">The Id of the user submitting it — taken from their token, never from the request body.</param>
+    /// <param name="request">The reading data the user submitted.</param>
+    public async Task<ReadingDto> CreateAsync(int stationId, Guid userId, CreateReadingRequest request)
+    {
+        var reading = new Reading
+        {
+            StationId = stationId,
+            Date = request.Date,
+            DissolvedOxygenMgL = request.DissolvedOxygenMgL,
+            UserId = userId
+        };
+
+        _context.Readings.Add(reading);
+        await _context.SaveChangesAsync();
+
+        return new ReadingDto(reading.Id, reading.Date, reading.DissolvedOxygenMgL, reading.UserId != null);
+    }
 }

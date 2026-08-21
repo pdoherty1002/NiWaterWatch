@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NiWaterWatch.Api.Services;
 using NiWaterWatch.Domain.Entities;
 using NiWaterWatch.Infrastructure.Persistence;
-using Xunit;
+using NiWaterWatch.Api.Contracts;
 
 namespace NiWaterWatch.Tests.Services;
 
@@ -74,4 +74,33 @@ public class ReadingServiceTests
         Assert.Empty(result.Items);
         Assert.Equal(0, result.TotalCount);
     }
+
+    [Fact]
+public async Task CreateAsync_SavesReading_WithCorrectUserIdAndIsUserSubmittedTrue()
+{
+    // Arrange
+    var context = CreateContext();
+
+    var station = new Station { Id = 1, StationCode = "TEST01", Name = "Test Station", PrimaryBasin = "Test Basin" };
+    context.Stations.Add(station);
+    await context.SaveChangesAsync();
+
+    var service = new ReadingService(context);
+    var userId = Guid.NewGuid();
+    var request = new CreateReadingRequest(new DateOnly(2026, 8, 21), 8.5);
+
+    // Act
+    var result = await service.CreateAsync(stationId: 1, userId: userId, request: request);
+
+    // Assert — check what the caller actually gets back.
+    Assert.True(result.IsUserSubmitted);
+    Assert.Equal(new DateOnly(2026, 8, 21), result.Date);
+    Assert.Equal(8.5, result.DissolvedOxygenMgL);
+
+    // Assert — separately confirm it was genuinely persisted, not just returned.
+    var savedReading = await context.Readings.FirstOrDefaultAsync(r => r.Id == result.Id);
+    Assert.NotNull(savedReading);
+    Assert.Equal(userId, savedReading!.UserId);
+    Assert.Equal(1, savedReading.StationId);
+}
 }
